@@ -38,15 +38,15 @@ Automate a mobile web scenario on Twitch using Selenium in Python.
 - StreamerPage
 
 ### 5. Write Test Case Using Pytest
-- Steps:
-  1. Go to Twitch mobile site
-  2. Click search
-  3. Enter "StarCraft II"
-  4. Scroll down twice
-  5. Click any streamer
-  6. Handle modal popup (if present)
-  7. Wait for video to load
-  8. Take a screenshot
+Steps:
+- Go to Twitch mobile site
+- Click search
+- Enter "StarCraft II"
+- Scroll down twice
+- Click any streamer
+- Handle modal popup (if present)
+- Wait for video to load
+- Take a screenshot
 
 ### 6. Add Logging & Error Handling
 
