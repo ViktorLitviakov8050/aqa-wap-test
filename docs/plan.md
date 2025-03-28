@@ -110,6 +110,7 @@ Steps:
 
 ### 8. Generate GIF of Test Execution
 - Use LICEcap or ScreenToGif
+- README should contain a gift showing the test running locally.
 
 ### 9. Create README
 - Short project intro

@@ -11,29 +11,31 @@ from webdriver_manager.firefox import GeckoDriverManager
 class DriverFactory:
     """Factory class to create WebDriver instances with mobile emulation"""
     
+    CHROME_DEVICES = {
+        "Pixel 2": {
+            "width": 411,
+            "height": 731,
+            "userAgent": "Mozilla/5.0 (Linux; Android 8.0; Pixel 2 Build/OPD3.170816.012) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Mobile Safari/537.36"
+        }
+    }
+    
     @staticmethod
-    def get_device_config(device_name="pixel_2"):
-        """Load device configuration from devices.json file"""
-        config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 
-                                 "config", "devices.json")
-        
-        with open(config_path, "r") as f:
-            devices = json.load(f)
-            
-        if device_name not in devices:
-            available_devices = ", ".join(devices.keys())
+    def get_device_config(device_name="Pixel 2"):
+        """Load device configuration"""
+        if device_name not in DriverFactory.CHROME_DEVICES:
+            available_devices = ", ".join(DriverFactory.CHROME_DEVICES.keys())
             logging.error(f"Device '{device_name}' not found. Available devices: {available_devices}")
             raise ValueError(f"Device '{device_name}' not found in configuration")
             
         logging.info(f"Using device configuration: {device_name}")
-        return devices[device_name]
+        return DriverFactory.CHROME_DEVICES[device_name]
     
     @staticmethod
-    def create_driver(device_name="pixel_2", browser_type="chrome", headless=False):
+    def create_driver(device_name="Pixel 2", browser_type="chrome", headless=False):
         """Create and configure a WebDriver instance based on device and browser type
         
         Args:
-            device_name (str): Name of the device to emulate (must exist in devices.json)
+            device_name (str): Name of the device to emulate (must exist in CHROME_DEVICES)
             browser_type (str): Type of browser to use ('chrome' or 'firefox')
             headless (bool): Whether to run the browser in headless mode
             
@@ -57,7 +59,9 @@ class DriverFactory:
         device_config = DriverFactory.get_device_config(device_name)
         
         chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_experimental_option("mobileEmulation", device_config)
+        
+        # Set mobile emulation using device name
+        chrome_options.add_experimental_option("mobileEmulation", {"deviceName": device_name})
         
         if headless:
             chrome_options.add_argument("--headless=new")
@@ -100,9 +104,11 @@ class DriverFactory:
             service = FirefoxService(GeckoDriverManager().install())
             driver = webdriver.Firefox(service=service, options=firefox_options)
             
-            # Firefox doesn't support direct mobile emulation like Chrome,
-            # so we set the window size to match the device dimensions
-            driver.set_window_size(device_config["width"], device_config["height"])
+            # Set window size slightly larger than the device dimensions
+            driver.set_window_size(
+                device_config["width"] + 50, 
+                device_config["height"] + 100
+            )
             
             return driver
         except Exception as e:
