@@ -1,0 +1,22 @@
+[
+  {
+    "query": "StarCraft II",
+    "expected_results": true
+  },
+  {
+    "query": "League of Legends",
+    "expected_results": true
+  },
+  {
+    "query": "Fortnite",
+    "expected_results": true
+  },
+  {
+    "query": "Dota 2",
+    "expected_results": true
+  },
+  {
+    "query": "RandomInvalidGameName12345",
+    "expected_results": false
+  }
+] 

@@ -1,8 +1,6 @@
 browser:
   name: chrome
   headless: false
-  mobile_emulation:
-    deviceName: 'iPhone 12 Pro'
 
 base_url: 'https://twitch.tv'
 
@@ -12,3 +10,5 @@ waits:
 
 screenshots:
   path: './screenshots'
+  
+default_device: 'pixel_2'
