@@ -78,7 +78,7 @@ class TestTwitchSearch:
             # Step 1: Navigate to Twitch
             step_start = log_step(logger, 1, 'Navigating to Twitch homepage')
             twitch_page.navigate()
-            WebDriverWait(driver, 5).until(
+            WebDriverWait(driver, 3).until(
                 lambda d: d.find_element(By.CSS_SELECTOR, 'main').is_displayed()
             )
             driver.save_screenshot(f'{screenshots_dir}/01_home_page.png')
@@ -87,7 +87,7 @@ class TestTwitchSearch:
             # Step 2: Click search
             step_start = log_step(logger, 2, 'Clicking search field')
             twitch_page.click_search()
-            WebDriverWait(driver, 5).until(
+            WebDriverWait(driver, 3).until(
                 lambda d: any(
                     d.find_elements(By.CSS_SELECTOR, selector) 
                     for selector in ['input[type="search"]', '[data-a-target="search-input"]']
@@ -120,7 +120,7 @@ class TestTwitchSearch:
             for selector in search_result_selectors:
                 try:
                     logger.info(f"Looking for search results with selector: {selector}")
-                    WebDriverWait(driver, 3).until(
+                    WebDriverWait(driver, 2).until(
                         lambda d: d.find_elements(By.CSS_SELECTOR, selector)
                     )
                     logger.info(f"Found search results with selector: {selector}")
@@ -132,8 +132,7 @@ class TestTwitchSearch:
             if not search_results_found:
                 # If no results found, just continue anyway and take another screenshot
                 logger.warning("No search results found with any selector, continuing anyway")
-                # Add a small wait to give the page time to respond
-                time.sleep(3)  # Increased wait time
+                time.sleep(1.5)
                 driver.save_screenshot(f'{screenshots_dir}/03_search_input_after_delay.png')
             
             logger.info(f"✓ Search query entered in {(time.time() - step_start):.2f} seconds")
@@ -172,7 +171,7 @@ class TestTwitchSearch:
                     
             # Wait for some content to appear regardless of previous steps
             try:
-                WebDriverWait(driver, 10).until(
+                WebDriverWait(driver, 5).until(
                     lambda d: any(len(d.find_elements(By.CSS_SELECTOR, selector)) > 0
                         for selector in [
                             '[data-test-selector="TitleLink"]', 
@@ -195,7 +194,7 @@ class TestTwitchSearch:
             for _ in range(2):
                 try:
                     twitch_page.scroll_page(1)  # Scroll once
-                    time.sleep(1)  # Wait for content to load
+                    time.sleep(0.5)  # Wait for content to load
                 except Exception as e:
                     logger.warning(f"Error during scrolling: {str(e)}")
             
@@ -304,7 +303,7 @@ class TestTwitchSearch:
             # Step 7: Handle mature content if present
             step_start = log_step(logger, 7, 'Handling mature content popup')
             twitch_page.handle_mature_content()
-            WebDriverWait(driver, 10).until(
+            WebDriverWait(driver, 5).until(
                 lambda d: any(
                     d.find_elements(By.CSS_SELECTOR, selector)
                     for selector in ['[data-a-target="video-player"]', '[data-test-selector="channel-root"]']

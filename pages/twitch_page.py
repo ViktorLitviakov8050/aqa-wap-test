@@ -204,10 +204,10 @@ class TwitchPage(BasePage):
             (By.CSS_SELECTOR, 'input[placeholder*="Search"]')
         ]
         
-        # Wait for any search input to be present and visible
+        # Reduced timeout from 5 to 3 seconds
         for locator in search_locators:
             try:
-                search_input = WebDriverWait(self.driver, 5).until(
+                search_input = WebDriverWait(self.driver, 3).until(
                     EC.presence_of_element_located(locator)
                 )
                 if search_input.is_displayed():
@@ -250,14 +250,12 @@ class TwitchPage(BasePage):
     def handle_mature_content(self) -> None:
         """Handle mature content popup if present"""
         try:
-            accept_button = WebDriverWait(self.driver, 5).until(
+            # Reduced timeout from 5 to 2 seconds
+            accept_button = WebDriverWait(self.driver, 2).until(
                 EC.element_to_be_clickable(self.MATURE_CONTENT_ACCEPT)
             )
             accept_button.click()
-            # Wait for popup to disappear
-            WebDriverWait(self.driver, 5).until_not(
-                EC.presence_of_element_located(self.MATURE_CONTENT_ACCEPT)
-            )
+            # No need to wait for popup to disappear, this saves time
         except TimeoutException:
             # No mature content popup found, which is fine
             pass
@@ -290,8 +288,8 @@ class TwitchPage(BasePage):
             (By.CSS_SELECTOR, 'a[href*="/channel"]')  # Channel links
         ]
         
-        # Give the page a moment to load suggestions
-        time.sleep(1)
+        # Reduced sleep from 1 to 0.5 seconds
+        time.sleep(0.5)
         
         # First try - just press Enter which is the simplest approach
         try:
